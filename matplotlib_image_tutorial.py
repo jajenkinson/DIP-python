@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Oct 18 14:44:41 2022
-
+John Jenkinson
 from the matplotlib tutorial:
     https://matplotlib.org/stable/tutorials/introductory/images.html#sphx-glr-tutorials-introductory-images-py
 This tutorial teaches the basics of reading an image in python.
