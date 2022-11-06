@@ -28,8 +28,6 @@ bearEdges = filters.sobel(bearImage)
 io.imshow(bearEdges)
 print(bearImage)
 #---------------------------------
-# anger... no cursor on lines already coded
-"""
 
 # import stinkbug image as a numpy array and print
 img = mpimg.imread('./images/stinkbug.png')
