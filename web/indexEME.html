@@ -42,7 +42,7 @@
             display: block;
             margin: 0 auto;
             cursor: pointer;
-            max-width: 20%; /* Ensure the image fits the screen width */
+            max-width: 100%; /* Ensure the image fits the screen width */
             height: auto; /* Maintain aspect ratio */
         }
 
@@ -102,7 +102,7 @@
     <!-- Content Section -->
     <div class="content-section">
         <h1>EME / EMEC Image Quality Measurements</h1>
-        <img id="uploadImage" src="images/uploadHere.png" alt="Upload Image" onclick="document.getElementById('fileInput').click();">
+        <img id="uploadImage" src="images/uploadHere.jpeg" alt="Upload Image" onclick="document.getElementById('fileInput').click();">
         <input id="fileInput" type="file" multiple style="display:none" onchange="processFiles(event)">
 
         <!-- Buttons for copy and download -->
@@ -125,7 +125,7 @@
     <div class="advertisement">Advertisement Placeholder 5</div>
 
     <!-- Footer -->
-    <footer>&copy; 2025 John Andrew Jenkinson</footer>
+    <footer>&copy; 2025</footer>
 
     <script>
         async function processFiles(event) {
@@ -162,23 +162,5 @@
         function saveResults(results) {
             // Save results to a txt file
             const headers = 'Image Name\tEME\tEMEC\n';
-            const rows = results.map(r => `${r.name}\t${r.eme.toFixed(2)}\t${r.emec.toFixed(2)}`).join('\n');
-            const blob = new Blob([headers + rows], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            document.downloadUrl = url;
-        }
-
-        function copyOutput() {
-            navigator.clipboard.writeText(document.downloadUrl);
-            alert("Output copied to clipboard!");
-        }
-
-        function downloadOutput() {
-            const a = document.createElement('a');
-            a.href = document.downloadUrl;
-            a.download = 'output.txt';
-            a.click();
-        }
-    </script>
-</body>
-</html>
+            const rows = results.map(r => `${r.name}\t${r.eme.toFixed`*
+
