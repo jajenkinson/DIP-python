@@ -175,17 +175,9 @@ async function processFiles(event) {
         const result = { name: file.name, eme: emeValue.toFixed(2) };
         results.push(result);
 
-        // Create a single parent div for the row
-        const rowDiv = document.createElement('div');
-        rowDiv.className = 'grid-item'; // Use consistent grid-item class for layout
-        rowDiv.style.display = 'grid';
-        rowDiv.style.gridTemplateColumns = '1fr 1fr'; // Two columns: input and grayscale images
-        rowDiv.style.alignItems = 'center';
-        rowDiv.style.gap = '20px';
-        rowDiv.style.marginBottom = '20px';
-
         // Original Image and Caption
         const originalImageDiv = document.createElement('div');
+        originalImageDiv.className = 'grid-item';
         originalImageDiv.style.textAlign = 'center';
         originalImageDiv.innerHTML = `
             <p style="font-weight: bold; color: black;">${file.name} Image</p>
@@ -212,18 +204,16 @@ async function processFiles(event) {
 
         // Grayscale Image and Caption
         const grayscaleImageDiv = document.createElement('div');
+        grayscaleImageDiv.className = 'grid-item';
         grayscaleImageDiv.style.textAlign = 'center';
         grayscaleImageDiv.innerHTML = `
             <p style="font-weight: bold; color: black;">EME = ${emeValue.toFixed(2)}</p>
             <img src="${grayscaleCanvas.toDataURL()}" alt="Grayscale of ${file.name}" style="max-width: 100%; height: auto;">
         `;
 
-        // Append both the original and grayscale image divs to the row
-        rowDiv.appendChild(originalImageDiv);
-        rowDiv.appendChild(grayscaleImageDiv);
-
-        // Append the row to the grid container
-        imageGrid.appendChild(rowDiv);
+        // Append both the original and grayscale image divs directly to the grid container
+        imageGrid.appendChild(originalImageDiv);
+        imageGrid.appendChild(grayscaleImageDiv);
     }
 }
 
