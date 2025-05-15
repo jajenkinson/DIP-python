@@ -175,6 +175,81 @@ async function processFiles(event) {
         const result = { name: file.name, eme: emeValue.toFixed(2) };
         results.push(result);
 
+        // Create a single parent div for the row
+        const rowDiv = document.createElement('div');
+        rowDiv.style.display = 'grid';
+        rowDiv.style.gridTemplateColumns = '1fr 1fr'; // Two columns: input and grayscale images
+        rowDiv.style.alignItems = 'center';
+        rowDiv.style.gap = '20px';
+        rowDiv.style.marginBottom = '20px';
+
+        // Original Image and Caption
+        const originalImageDiv = document.createElement('div');
+        originalImageDiv.style.textAlign = 'center';
+        originalImageDiv.innerHTML = `
+            <p style="font-weight: bold; color: black;">${file.name} Image</p>
+            <img src="${URL.createObjectURL(file)}" alt="${file.name}" style="max-width: 100%; height: auto;">
+        `;
+
+        // Convert image to grayscale
+        const grayscaleCanvas = document.createElement('canvas');
+        const grayscaleContext = grayscaleCanvas.getContext('2d');
+        grayscaleCanvas.width = canvas.width;
+        grayscaleCanvas.height = canvas.height;
+        grayscaleContext.drawImage(image, 0, 0);
+        const grayscaleImageData = grayscaleContext.getImageData(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < grayscaleImageData.data.length; i += 4) {
+            const gray = grayscaleImageData.data[i] * 0.299 +
+                         grayscaleImageData.data[i + 1] * 0.587 +
+                         grayscaleImageData.data[i + 2] * 0.114;
+            grayscaleImageData.data[i] = gray;
+            grayscaleImageData.data[i + 1] = gray;
+            grayscaleImageData.data[i + 2] = gray;
+        }
+        grayscaleContext.putImageData(grayscaleImageData, 0, 0);
+
+        // Grayscale Image and Caption
+        const grayscaleImageDiv = document.createElement('div');
+        grayscaleImageDiv.style.textAlign = 'center';
+        grayscaleImageDiv.innerHTML = `
+            <p style="font-weight: bold; color: black;">EME = ${emeValue.toFixed(2)}</p>
+            <img src="${grayscaleCanvas.toDataURL()}" alt="Grayscale of ${file.name}" style="max-width: 100%; height: auto;">
+        `;
+
+        // Append both the original and grayscale image divs to the row
+        rowDiv.appendChild(originalImageDiv);
+        rowDiv.appendChild(grayscaleImageDiv);
+
+        // Append the row to the grid
+        imageGrid.appendChild(rowDiv);
+    }
+}
+
+    const files = event.target.files;
+    const blockSize = [16, 16]; // Block size for EME calculation
+    const imageGrid = document.getElementById('imageGrid');
+
+    // Clear the image grid to remove existing items
+    imageGrid.innerHTML = '';
+
+    // Reset the results array to avoid duplicates
+    results.length = 0;
+
+    for (const file of files) {
+        const image = await loadImage(file);
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        context.drawImage(image, 0, 0);
+        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        const emeValue = computeEME(imageData, blockSize);
+
+        // Add to results
+        const result = { name: file.name, eme: emeValue.toFixed(2) };
+        results.push(result);
+
         // Create a parent row container for the 1x2 grid row
         const rowDiv = document.createElement('div');
         rowDiv.style.display = 'grid';
