@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - EME</title>
+    <style>
+        /* General styles for the entire page */
+        body {
+            background-color: #F5DEB3; /* Light tan background color */
+            color: #A9A9A9; /* Medium-light grey text color */
+            font-family: Arial, sans-serif;
+        }
+
+        /* Styles for the links section */
+        .links-section {
+            border: 1.5px solid white; /* Border for the links section */
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .links-section a {
+            color: #A9A9A9; /* Medium-light grey text color */
+            text-decoration: none;
+            margin-right: 15px;
+            font-size: 18px; /* Adjust font size for links */
+        }
+
+        .links-section a:hover {
+            text-decoration: underline;
+        }
+
+        /* Styles for the content section */
+        .content-section {
+            padding: 20px;
+        }
+
+        /* Style for the image grid */
+        .image-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns for each row */
+            gap: 20px; /* Space between grid items */
+        }
+
+        .image-item {
+            text-align: center;
+        }
+
+        .image-item img {
+            max-width: 100%; /* Ensure images fit within their container */
+            height: auto;
+        }
+
+        .image-caption {
+            font-size: 18px; /* Caption font size */
+            font-weight: bold;
+            color: black; /* Black text color for captions */
+            margin-bottom: 10px;
+        }
+
+        /* Copyright styling */
+        .copyright {
+            margin-top: 20px;
+            font-size: 12px;
+            color: black; /* Black text color for copyright */
+        }
+    </style>
+</head>
+<body>
+    <!-- Links Section -->
+    <div class="links-section">
+        <a href="indexEME.html">Home</a>
+        <a href="gallery.html">Gallery</a>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content-section">
+        <div class="image-grid">
+            <!-- First Row -->
+            <div class="image-item">
+                <div class="image-caption">Original Image</div>
+                <img src="stinkbug.png" alt="Original stinkbug image">
+            </div>
+            <div class="image-item">
+                <div class="image-caption">EME = 2.800525552642918</div>
+                <img src="stinkbug-greyscale.png" alt="stinkbug image"">
+            </div>
+
+            <!-- Additional rows can be added dynamically by repeating this structure -->
+            <!-- Example for a second row -->
+            <div class="image-item">
+                <div class="image-caption">Original Image</div>
+                <img src="original_image2.jpg" alt="Original Image 2">
+            </div>
+            <div class="image-item">
+                <div class="image-caption">EME = xy.z</div>
+                <img src="enhanced_image2.jpg" alt="Enhanced Image 2">
+            </div>
+        </div>
+
+        <!-- Copyright Notice -->
+        <div class="copyright">
+            &copy; 2025
+        </div>
+    </div>
+</body>
+</html>
