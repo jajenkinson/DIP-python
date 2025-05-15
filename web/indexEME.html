@@ -165,6 +165,8 @@
         const results = [];
 
 async function processFiles(event) {
+    console.log("processFiles triggered");
+    // rest of your code...
     const files = event.target.files;
     const blockSize = [16, 16]; // Block size for EME calculation
     const imageGrid = document.getElementById('imageGrid');
