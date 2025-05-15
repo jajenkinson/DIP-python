@@ -150,7 +150,7 @@
     <script>
         const results = [];
 
-  async function processFiles(event) {
+async function processFiles(event) {
     const files = event.target.files;
     const blockSize = [16, 16]; // Block size for EME calculation
     const imageGrid = document.getElementById('imageGrid');
@@ -176,16 +176,17 @@
         results.push(result);
         console.log(`Added to results:`, result); // Log each result added to the array
 
-        // Create grid items
-        const originalImageDiv = document.createElement('div');
-        originalImageDiv.className = 'grid-item';
-        originalImageDiv.innerHTML = `
-            <img src="${URL.createObjectURL(file)}" alt="${file.name}">
-            <p>${file.name} Image</p>
-        `;
+        // Create a single parent container for both original and grayscale images
+        const parentDiv = document.createElement('div');
+        parentDiv.className = 'grid-item'; // Use the same grid-item class for layout
 
-        const grayscaleDiv = document.createElement('div');
-        grayscaleDiv.className = 'grid-item';
+        // Original Image and Caption
+        const originalImageHTML = `
+            <div>
+                <img src="${URL.createObjectURL(file)}" alt="${file.name}">
+                <p>${file.name} Image</p>
+            </div>
+        `;
 
         // Convert image to grayscale
         const grayscaleCanvas = document.createElement('canvas');
@@ -205,17 +206,21 @@
         }
         grayscaleContext.putImageData(grayscaleImageData, 0, 0);
 
-        grayscaleDiv.innerHTML = `
-            <img src="${grayscaleCanvas.toDataURL()}" alt="Grayscale of ${file.name}">
-            <p>EME = ${emeValue.toFixed(2)}</p>
+        // Grayscale Image and Caption
+        const grayscaleImageHTML = `
+            <div>
+                <img src="${grayscaleCanvas.toDataURL()}" alt="Grayscale of ${file.name}">
+                <p>EME = ${emeValue.toFixed(2)}</p>
+            </div>
         `;
 
-        // Append to grid
-        imageGrid.appendChild(originalImageDiv);
-        imageGrid.appendChild(grayscaleDiv);
+        // Combine both original and grayscale image sections into the parent container
+        parentDiv.innerHTML = originalImageHTML + grayscaleImageHTML;
+
+        // Append the parent container to the grid
+        imageGrid.appendChild(parentDiv);
     }
 }
-
         function loadImage(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
