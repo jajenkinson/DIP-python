@@ -1,0 +1,67 @@
+import numpy as np
+import cv2  # OpenCV library for image processing
+
+def compute_eme_metric(image, block_size):
+    """
+    Compute the EME (Enhancement Measurement Estimation) metric for a grayscale image.
+
+    Parameters:
+        image (numpy.ndarray): A 2D array representing the grayscale image.
+        block_size (tuple): A tuple (L1, L2) representing the size of each block.
+
+    Returns:
+        float: The computed EME metric.
+    """
+    # Extract block dimensions
+    L1, L2 = block_size
+    
+    # Get image dimensions
+    N1, N2 = image.shape
+    
+    # Calculate the number of blocks in each dimension
+    k1 = N1 // L1  # Number of blocks along height
+    k2 = N2 // L2  # Number of blocks along width
+    
+    # Initialize the EME value
+    eme = 0.0
+    
+    # Loop through each block
+    for k in range(k1):
+        for l in range(k2):
+            # Get the (k, l)-th block
+            block = image[k*L1:(k+1)*L1, l*L2:(l+1)*L2]
+            
+            # Calculate max and min of the block
+            max_val = np.max(block)
+            min_val = np.min(block)
+            
+            # Avoid division by zero
+            if min_val > 0:
+                # Compute the log ratio for the current block
+                eme += 20 * np.log10(max_val / min_val)
+    
+    # Average EME over all blocks
+    eme /= (k1 * k2)
+    
+    return eme
+
+if __name__ == "__main__":
+    # Read the input color image using OpenCV
+    # Replace 'image.jpg' with the actual path to your image
+    color_image = cv2.imread('image.jpg')
+
+    # Check if the image was loaded successfully
+    if color_image is None:
+        print("Error: Unable to load the image. Make sure the path is correct.")
+        exit(1)
+    
+    # Convert the color image to grayscale using the luminosity method
+    # The formula for luminosity is: 0.2989 * R + 0.5870 * G + 0.1140 * B
+    grayscale_image = cv2.cvtColor(color_image, cv2.COLOR_BGR2GRAY)
+
+    # Define the block size (e.g., 16x16)
+    block_size = (16, 16)
+    
+    # Compute the EME metric
+    eme_metric = compute_eme_metric(grayscale_image, block_size)
+    print(f"EME Metric: {eme_metric}")
