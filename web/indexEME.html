@@ -164,8 +164,9 @@
     <script>
         const results = [];
 
+// At the top of the processFiles function
 async function processFiles(event) {
-    console.log("processFiles triggered");
+    console.log("processFiles triggered"); // Logs every time the function is triggered
     // rest of your code...
     const files = event.target.files;
     const blockSize = [16, 16]; // Block size for EME calculation
@@ -319,11 +320,18 @@ console.log('Appending to imageGrid:', originalImageDiv, grayscaleImageDiv);
                 alert('No results available to copy.');
             }
         }
-// Add event listener for file input change
-document.getElementById('fileInput').addEventListener('change', processFiles);
+// Ensure the event listener is only added once
+const fileInput = document.getElementById('fileInput');
 
-// Debugging: Log event listeners attached to the fileInput
-console.log(getEventListeners(document.getElementById('fileInput')));
+// Remove any existing event listener before adding a new one
+fileInput.removeEventListener('change', processFiles);
+
+// Add the event listener
+fileInput.addEventListener('change', processFiles);
+
+// After adding the event listener
+console.log("Event listener added for fileInput");
+
     </script>
 </body>
 </html>
