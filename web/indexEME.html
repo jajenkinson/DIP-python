@@ -171,12 +171,11 @@ async function processFiles(event) {
         const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
         const emeValue = computeEME(imageData, blockSize);
 
-        // Add to results and log the result
+        // Add to results
         const result = { name: file.name, eme: emeValue.toFixed(2) };
         results.push(result);
-        console.log(`Added to results:`, result);
 
-        // Create a parent container for the row
+        // Create a parent row container for the 1x2 grid row
         const rowDiv = document.createElement('div');
         rowDiv.style.display = 'grid';
         rowDiv.style.gridTemplateColumns = '1fr 1fr';
