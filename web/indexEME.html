@@ -227,6 +227,7 @@ async function processFiles(event) {
 //Log Appending:
 console.log('Appending Original Image:', originalImageDiv);
 console.log('Appending Grayscale Image:', grayscaleImageDiv);
+console.log('Appending to imageGrid:', originalImageDiv, grayscaleImageDiv);
 
 
         // Append both the original and grayscale image divs directly to the grid container
@@ -316,9 +317,11 @@ console.log('Appending Grayscale Image:', grayscaleImageDiv);
                 alert('No results available to copy.');
             }
         }
+// Add event listener for file input change
+document.getElementById('fileInput').addEventListener('change', processFiles);
 
-        // Add event listener for file input change
-        document.getElementById('fileInput').addEventListener('change', processFiles);
+// Debugging: Log event listeners attached to the fileInput
+console.log(getEventListeners(document.getElementById('fileInput')));
     </script>
 </body>
 </html>
