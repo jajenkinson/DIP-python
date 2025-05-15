@@ -1,3 +1,8 @@
+Here is the updated `indexEME.html` file with the requested changes:
+
+### Updated `indexEME.html`
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,31 +12,31 @@
     <style>
         /* General styles for the entire page */
         body {
-            background-color: #F5DEB3; /* Light tan background color */
-            color: #A9A9A9; /* Medium-light grey text color */
+            background-color: #F5DEB3;
+            color: #A9A9A9;
             font-family: Arial, sans-serif;
             text-align: center;
         }
 
-        /* Styles for the links section */
+        /* Links Section */
         .links-section {
-            border: 1.5px solid white; /* Border for the links section */
+            border: 1.5px solid white;
             padding: 10px;
             margin-bottom: 20px;
         }
 
         .links-section a {
-            color: #A9A9A9; /* Medium-light grey text color */
+            color: #A9A9A9;
             text-decoration: none;
             margin-right: 15px;
-            font-size: 18px; /* Adjust font size for links */
+            font-size: 18px;
         }
 
         .links-section a:hover {
             text-decoration: underline;
         }
 
-        /* Centered Section */
+        /* Content Section */
         .content-section {
             margin: 20px auto;
             text-align: center;
@@ -42,8 +47,8 @@
             display: block;
             margin: 0 auto;
             cursor: pointer;
-            max-width: 20%; /* Ensure the image fits the screen width */
-            height: auto; /* Maintain aspect ratio */
+            max-width: 20%;
+            height: auto;
         }
 
         .buttons {
@@ -71,17 +76,35 @@
         }
 
         .grid-item img {
-            max-width: 100%; /* Ensure images fit within their grid cells */
-            height: auto; /* Maintain aspect ratio */
+            max-width: 100%;
+            height: auto;
+        }
+
+        .grid-item p {
+            color: black;
+            font-size: 14px;
+            margin-top: 5px;
         }
 
         /* Advertisement placeholders */
-        .advertisement {
+        .advertisement-horizontal {
+            border: 1px solid #ccc;
+            margin: 10px auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #fff;
+            max-width: 80%;
+        }
+
+        .advertisement-vertical {
             border: 1px solid #ccc;
             margin: 10px;
             padding: 20px;
             text-align: center;
             background-color: #fff;
+            width: 20%;
+            display: inline-block;
+            vertical-align: top;
         }
 
         /* Footer */
@@ -102,7 +125,16 @@
     <!-- Content Section -->
     <div class="content-section">
         <h1>EME / EMEC Image Quality Measurements</h1>
-        <img id="uploadImage" src="images/uploadHere.png" alt="Upload Image" onclick="document.getElementById('fileInput').click();">
+
+        <!-- Horizontal Advertisement -->
+        <div class="advertisement-horizontal">Advertisement Placeholder</div>
+
+        <!-- Upload Section with Vertical Advertisements -->
+        <div>
+            <div class="advertisement-vertical">Advertisement Placeholder</div>
+            <img id="uploadImage" src="images/uploadHere.png" alt="Upload Image" onclick="document.getElementById('fileInput').click();">
+            <div class="advertisement-vertical">Advertisement Placeholder</div>
+        </div>
         <input id="fileInput" type="file" multiple style="display:none" onchange="processFiles(event)">
 
         <!-- Buttons for copy and download -->
@@ -117,13 +149,6 @@
         </div>
     </div>
 
-    <!-- Advertisements -->
-    <div class="advertisement">Advertisement Placeholder 1</div>
-    <div class="advertisement">Advertisement Placeholder 2</div>
-    <div class="advertisement">Advertisement Placeholder 3</div>
-    <div class="advertisement">Advertisement Placeholder 4</div>
-    <div class="advertisement">Advertisement Placeholder 5</div>
-
     <!-- Footer -->
     <footer>&copy; 2025</footer>
 
@@ -131,36 +156,147 @@
         async function processFiles(event) {
             const files = event.target.files;
             const results = [];
+            const blockSize = [16, 16]; // Block size for EME calculation
             const imageGrid = document.getElementById('imageGrid');
 
             for (const file of files) {
-                // Call EME.py for each file (example simulation)
-                const emeValue = await simulateEMEProcessing(file.name);
+                const image = await loadImage(file);
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = image.width;
+                canvas.height = image.height;
+                context.drawImage(image, 0, 0);
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                const emeValue = computeEME(imageData, blockSize);
 
-                // Update results
-                results.push({ name: file.name, eme: emeValue, emec: emeValue * 1.1 });
+                // Add to results
+                results.push({ name: file.name, eme: emeValue.toFixed(2) });
 
-                // Add to grid
-                const gridItem = document.createElement('div');
-                gridItem.className = 'grid-item';
-                gridItem.innerHTML = `
+                // Create grid items
+                const originalImageDiv = document.createElement('div');
+                originalImageDiv.className = 'grid-item';
+                originalImageDiv.innerHTML = `
                     <img src="${URL.createObjectURL(file)}" alt="${file.name}">
-                    <p>${file.name}</p>
+                    <p>${file.name} Image</p>
+                `;
+
+                const grayscaleDiv = document.createElement('div');
+                grayscaleDiv.className = 'grid-item';
+
+                // Convert image to grayscale
+                const grayscaleCanvas = document.createElement('canvas');
+                const grayscaleContext = grayscaleCanvas.getContext('2d');
+                grayscaleCanvas.width = canvas.width;
+                grayscaleCanvas.height = canvas.height;
+                grayscaleContext.drawImage(image, 0, 0);
+                const grayscaleImageData = grayscaleContext.getImageData(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < grayscaleImageData.data.length; i += 4) {
+                    const gray = grayscaleImageData.data[i] * 0.299 +
+                                 grayscaleImageData.data[i + 1] * 0.587 +
+                                 grayscaleImageData.data[i + 2] * 0.114;
+                    grayscaleImageData.data[i] = gray;
+                    grayscaleImageData.data[i + 1] = gray;
+                    grayscaleImageData.data[i + 2] = gray;
+                }
+                grayscaleContext.putImageData(grayscaleImageData, 0, 0);
+
+                grayscaleDiv.innerHTML = `
+                    <img src="${grayscaleCanvas.toDataURL()}" alt="Grayscale of ${file.name}">
                     <p>EME = ${emeValue.toFixed(2)}</p>
                 `;
-                imageGrid.appendChild(gridItem);
+
+                // Append to grid
+                imageGrid.appendChild(originalImageDiv);
+                imageGrid.appendChild(grayscaleDiv);
             }
 
             saveResults(results);
         }
 
-        function simulateEMEProcessing(fileName) {
-            // Simulate output from EME.py
-            return new Promise(resolve => setTimeout(() => resolve(Math.random() * 100), 1000));
+        function loadImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.onerror = reject;
+                    img.src = reader.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function computeEME(imageData, blockSize) {
+            const L1 = blockSize[0];
+            const L2 = blockSize[1];
+            const width = imageData.width;
+            const height = imageData.height;
+
+            let eme = 0.0;
+            const k1 = Math.floor(height / L1);
+            const k2 = Math.floor(width / L2);
+
+            for (let k = 0; k < k1; k++) {
+                for (let l = 0; l < k2; l++) {
+                    let maxVal = 0;
+                    let minVal = 255;
+
+                    for (let y = k * L1; y < (k + 1) * L1; y++) {
+                        for (let x = l * L2; x < (l + 1) * L2; x++) {
+                            const pixelIndex = (y * width + x) * 4;
+                            const gray = imageData.data[pixelIndex] * 0.299 +
+                                         imageData.data[pixelIndex + 1] * 0.587 +
+                                         imageData.data[pixelIndex + 2] * 0.114;
+                            maxVal = Math.max(maxVal, gray);
+                            minVal = Math.min(minVal, gray);
+                        }
+                    }
+
+                    if (minVal > 0) {
+                        eme += 20 * Math.log10(maxVal / minVal);
+                    }
+                }
+            }
+
+            eme /= (k1 * k2);
+            return eme;
         }
 
         function saveResults(results) {
-            // Save results to a txt file
-            const headers = 'Image Name\tEME\tEMEC\n';
-            const rows = results.map(r => `${r.name}\t${r.eme.toFixed`*
-
+            const headers = 'Image Name\tEME\n';
+            const rows = results.map(r => `${r.name}\t${r.eme}`).join('\n');
+            const content = headers + rows;
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            document.outputUrl = URL.createObjectURL(blob);
+            document.outputContent = content;
+        }
+
+        function copyOutput() {
+            if (document.outputContent) {
+                navigator.clipboard.writeText(document.outputContent)
+                    .then(() => alert('Output copied to clipboard!'))
+                    .catch(err => console.error('Failed to copy: ', err));
+            } else {
+                alert('No output available to copy!');
+            }
+        }
+
+        function downloadOutput() {
+            if (document.outputUrl) {
+                const a = document.createElement('a');
+                a.href = document.outputUrl;
+                a.download = 'output.txt';
+                a.click();
+            } else {
+                alert('No output available to download!');
+            }
+        }
+    </script>
+</body>
+</html>
+```
+
+
