@@ -258,17 +258,7 @@
             return eme;
         }
 
-        function copyOutput() {
-            const headers = 'Image Name\tEME Value\n';
-            const rows = results.map(r => `${r.name}\t${r.eme}`).join('\n');
-            const content = headers + rows;
-
-            navigator.clipboard.writeText(content)
-                .then(() => alert('Output copied to clipboard!'))
-                .catch(err => console.error('Failed to copy: ', err));
-        }
-
-        function downloadOutput() {
+               function downloadOutput() {
             const headers = 'Image Name\tEME Value\n';
             const rows = results.map(r => `${r.name}\t${r.eme}`).join('\n');
             const content = headers + rows;
@@ -280,6 +270,30 @@
             a.download = 'output.txt';
             a.click();
         }
+
+function copyOutput() {
+    if (results && results.length > 0) {
+        const headers = 'Image Name\tEME Value\n';
+        const rows = results.map(r => `${r.name}\t${r.eme}`).join('\n');
+        const content = headers + rows;
+
+        navigator.clipboard.writeText(content)
+            .then(() => {
+                alert('Output table copied to clipboard!');
+            })
+            .catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy output to clipboard.');
+            });
+    } else {
+        alert('No results available to copy.');
+    }
+}
+
+        // Optional: Add event listener for file input change
+        document.getElementById('fileInput').addEventListener('change', processFiles);
+
+ 
     </script>
 </body>
 </html>
