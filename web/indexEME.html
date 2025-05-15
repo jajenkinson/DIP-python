@@ -174,18 +174,22 @@ async function processFiles(event) {
         // Add to results and log the result
         const result = { name: file.name, eme: emeValue.toFixed(2) };
         results.push(result);
-        console.log(`Added to results:`, result); // Log each result added to the array
+        console.log(`Added to results:`, result);
 
-        // Create a single parent container for both original and grayscale images
-        const parentDiv = document.createElement('div');
-        parentDiv.className = 'grid-item'; // Use the same grid-item class for layout
+        // Create a parent container for the row
+        const rowDiv = document.createElement('div');
+        rowDiv.style.display = 'grid';
+        rowDiv.style.gridTemplateColumns = '1fr 1fr';
+        rowDiv.style.alignItems = 'center';
+        rowDiv.style.gap = '20px';
+        rowDiv.style.marginBottom = '20px';
 
         // Original Image and Caption
-        const originalImageHTML = `
-            <div>
-                <img src="${URL.createObjectURL(file)}" alt="${file.name}">
-                <p>${file.name} Image</p>
-            </div>
+        const originalImageDiv = document.createElement('div');
+        originalImageDiv.style.textAlign = 'center';
+        originalImageDiv.innerHTML = `
+            <p style="font-weight: bold; color: black;">${file.name} Image</p>
+            <img src="${URL.createObjectURL(file)}" alt="${file.name}" style="max-width: 100%; height: auto;">
         `;
 
         // Convert image to grayscale
@@ -207,18 +211,19 @@ async function processFiles(event) {
         grayscaleContext.putImageData(grayscaleImageData, 0, 0);
 
         // Grayscale Image and Caption
-        const grayscaleImageHTML = `
-            <div>
-                <img src="${grayscaleCanvas.toDataURL()}" alt="Grayscale of ${file.name}">
-                <p>EME = ${emeValue.toFixed(2)}</p>
-            </div>
+        const grayscaleImageDiv = document.createElement('div');
+        grayscaleImageDiv.style.textAlign = 'center';
+        grayscaleImageDiv.innerHTML = `
+            <p style="font-weight: bold; color: black;">EME = ${emeValue.toFixed(2)}</p>
+            <img src="${grayscaleCanvas.toDataURL()}" alt="Grayscale of ${file.name}" style="max-width: 100%; height: auto;">
         `;
 
-        // Combine both original and grayscale image sections into the parent container
-        parentDiv.innerHTML = originalImageHTML + grayscaleImageHTML;
+        // Append both the original and grayscale image divs to the row
+        rowDiv.appendChild(originalImageDiv);
+        rowDiv.appendChild(grayscaleImageDiv);
 
-        // Append the parent container to the grid
-        imageGrid.appendChild(parentDiv);
+        // Append the row to the grid
+        imageGrid.appendChild(rowDiv);
     }
 }
         function loadImage(file) {
